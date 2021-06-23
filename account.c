@@ -6,6 +6,7 @@
 
 #define NAME_LENGTH (10)
 #define ACCOUNT_LENGTH (8)
+#define PW_LENGTH(10)
 
 
 void generate_number_for_account(size_t count, char account_number[])
@@ -39,14 +40,12 @@ int create_new_account()
 	fgets(name, NAME_LENGTH, stdin);
 
 	create_account(account_num);
-	printf("\n");
-	printf("Your account number is: %s\n", account_num); 
 
-	printf("Enter your account password: ");
+	printf("Enter your account password(8-10): ");
+	fgets(password, PW_LENGTH, stdin);
 
 	printf("\n");
-	printf("Hello, %s\n", name);
-	printf("Account, %s\n", account_num);
+	printf("Hello, %s, your account number is: %s\n", name, account_num);
 
 	return 1;	
 }

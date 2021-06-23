@@ -12,10 +12,9 @@ int main (void)
 	printf("3.Transactions\n");
 	printf("4.Check account details\n");
 	printf("5.Remove existing account\n");
-	printf("6.View Customer list\n");
-	printf("7.Exit\n");
+	printf("6.Exit\n");
 	printf("\n");
-	printf("Select 1-7: ");
+	printf("Select 1-6: ");
 
 	scanf("%lu", &num);
 	getchar();
