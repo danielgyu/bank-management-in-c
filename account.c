@@ -10,8 +10,7 @@
 
 void generate_number_for_account(size_t count, char account_number[])
 {
-	size_t i;
-	int rd1, r2;
+	int rd1, rd2;
 
 	srand(time(0));
 	rd1 = 1000 + (rand() % 9000);
@@ -21,28 +20,26 @@ void generate_number_for_account(size_t count, char account_number[])
 }
 
 
-char create_account()
+char* create_account(char* account_number)
 {
-	char account_number[ACCOUNT_LENGTH+1];
-
 	generate_number_for_account(ACCOUNT_LENGTH, account_number);
 
-	return account_number
+	return account_number;
 }
 
 
 int create_new_account()
 {
 	char name[NAME_LENGTH];	
-	char account_num[ACCOUNT_LENGTH];
+	char account_num[ACCOUNT_LENGTH+1];
 
 	printf("### CREATE ACCOUNT ###\n");
 
 	printf("Enter your name: ");
 	fgets(name, NAME_LENGTH, stdin);
 
-	account_num = create_account();
-	print("\n");
+	create_account(account_num);
+	printf("\n");
 	printf("Your account number is: %s\n", account_num); 
 
 	printf("Enter your account password: ");
