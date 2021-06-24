@@ -37,9 +37,13 @@ struct AccountInfo* create_account(struct AccountInfo* acc_info)
 void save_account(struct AccountInfo* acc_info)
 {
 	FILE *fptr;
-	fptr = fopen("account_db", "w+");
+	if (fopen("account_db", "r") == NULL) {
+		fptr = fopen("account_db", "w");
+	} else {
+		fptr = fopen("account_db", "a");
+	}
 
-	fprintf(fptr, "%s, %s, %s", acc_info->holder_name, acc_info->password, acc_info->account_num);
+	fprintf(fptr, "%s, %s, %s\n", acc_info->holder_name, acc_info->password, acc_info->account_num);
 
 	fclose(fptr);
 }
