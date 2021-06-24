@@ -4,12 +4,15 @@
 
 #include "bank.h"
 
-#define NAME_LENGTH (10)
 #define ACCOUNT_LENGTH (8)
-#define PW_LENGTH(10)
 
+struct AccountInfo {
+	char* account_num;
+	char* holder_name;
+	char* password;
+};
 
-void generate_number_for_account(size_t count, char account_number[])
+void generate_number_for_account(size_t count, struct AccountInfo *acc_info)
 {
 	int rd1, rd2;
 
@@ -17,35 +20,47 @@ void generate_number_for_account(size_t count, char account_number[])
 	rd1 = 1000 + (rand() % 9000);
 	rd2 = 1000 + (rand() % 9000);
 
-	sprintf(account_number, "%d%d", rd1, rd2);	
+	sprintf(acc_info->account_num, "%d%d", rd1, rd2);	
 }
 
 
-char* create_account(char* account_number)
+struct AccountInfo* create_account(struct AccountInfo *acc_info)
 {
-	generate_number_for_account(ACCOUNT_LENGTH, account_number);
+	generate_number_for_account(ACCOUNT_LENGTH, acc_info);
 
-	return account_number;
+	return acc_info;
+}
+
+
+void save_account(struct AccountInfo *acc_info)
+{
+	FILE *fptr;
+	fptr = fopen("account_db", "w+");
+
+	fprintf(fptr, "%s, %s, %s", acc_info->account_num, acc_info->holder_name, acc_info->password);
+
+	fclose(fptr);
 }
 
 
 int create_new_account()
 {
-	char name[NAME_LENGTH];	
-	char account_num[ACCOUNT_LENGTH+1];
+	struct AccountInfo *acc_info = malloc(sizeof(struct AccountInfo));
 
 	printf("### CREATE ACCOUNT ###\n");
 
 	printf("Enter your name: ");
-	fgets(name, NAME_LENGTH, stdin);
-
-	create_account(account_num);
+	scanf("%s", acc_info->holder_name);
 
 	printf("Enter your account password(8-10): ");
-	fgets(password, PW_LENGTH, stdin);
+	scanf("%s", acc_info->password);
+
+	create_account(acc_info);
+	save_account(acc_info);
 
 	printf("\n");
-	printf("Hello, %s, your account number is: %s\n", name, account_num);
+	printf("Hello, %s your account number is: %s\n", acc_info->holder_name, acc_info->account_num);
 
+	free(acc_info);
 	return 1;	
 }
