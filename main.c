@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <assert.h>
 
 #include "bank.h"
 
@@ -18,6 +19,7 @@ int main (void)
 
 	scanf("%lu", &num);
 	getchar();
+	assert(num < 7);
 	printf("\n");
 
 	switch(num)
@@ -26,6 +28,7 @@ int main (void)
 			create_new_account();
 			break;
 		case 2:
+			update_account();
 			break;
 		case 3:
 			break;
