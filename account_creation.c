@@ -43,7 +43,7 @@ void save_account(struct AccountInfo* acc_info)
 		fptr = fopen("account_db", "a");
 	}
 
-	fprintf(fptr, "%s, %s, %s\n", acc_info->holder_name, acc_info->password, acc_info->account_num);
+	fprintf(fptr, "%s, %s, %s\n", acc_info->account_num, acc_info->holder_name, acc_info->password);
 
 	fclose(fptr);
 }
