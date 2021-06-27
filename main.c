@@ -18,7 +18,6 @@ int main (void)
 	printf("Select 1-6: ");
 
 	scanf("%lu", &num);
-	getchar();
 	assert(num < 7);
 	printf("\n");
 
