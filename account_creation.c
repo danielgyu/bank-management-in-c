@@ -1,12 +1,13 @@
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
 #include "bank.h"
 
-#define NAME_LENGTH (10)
 #define ACCOUNT_LENGTH (9)
-#define PW_LENGTH (10)
+#define NAME_LENGTH (10)
+#define PW_LENGTH (4)
 
 struct AccountInfo {
 	char holder_name[NAME_LENGTH];
@@ -36,6 +37,7 @@ struct AccountInfo* create_account(struct AccountInfo* acc_info)
 
 void save_account(struct AccountInfo* acc_info)
 {
+	// make file for account's name, password, acc_number, balance
 	FILE *fptr;
 	if (fopen("account_db", "r") == NULL) {
 		fptr = fopen("account_db", "w");
@@ -52,14 +54,24 @@ void save_account(struct AccountInfo* acc_info)
 int create_new_account()
 {
 	struct AccountInfo* acc_info = malloc(sizeof(struct AccountInfo));
+	size_t i;
+	char buffer[PW_LENGTH + 1];
 
 	printf("### CREATE ACCOUNT ###\n");
 
-	printf("Enter your name: ");
+	printf("Enter your two word initial(e.g. KG): ");
 	scanf("%s", acc_info->holder_name);
 
-	printf("Enter your account password(8-10): ");
-	scanf("%s", acc_info->password);
+	printf("Enter your 4 PIN password: ");
+	scanf("%s", buffer);
+	
+	if (buffer[4]) {
+		printf("not four digits\n");
+		exit(1);
+	}
+	for (i = 0; i <= PW_LENGTH; i++) {
+		acc_info->password[i] = buffer[i];
+	}
 
 	create_account(acc_info);
 	save_account(acc_info);
