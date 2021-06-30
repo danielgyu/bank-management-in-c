@@ -3,23 +3,57 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#define PW_LENGTH (10)
+#define PW_LENGTH (4)
+#define ONE_LINE (19)
+#define TEMP_BUFFER (1000)
 
-void get_and_change_pw(FILE *fptr, long current_position) {
-	char new_password[PW_LENGTH];
-	char line_buffer[8];
+void get_and_change_pw(FILE *fptr, size_t current_line, char *line_data) {
+	FILE *temp_fptr;
+	char new_password[PW_LENGTH + 1];
+	char buffer[TEMP_BUFFER];
+	char modified_line[ONE_LINE];
+	size_t count, i, n;
 
-	printf("type new password: ");
+	printf("Enter new password(4 digit PIN): ");
 	scanf("%s", new_password);
-	printf("\n");
+	if (new_password[PW_LENGTH]) {
+		printf("Not four digits\n");
+		exit(1);
+	}
 
-	fseek(fptr, current_position, SEEK_SET);
-	fscanf(fptr, "%s", line_buffer);
-	printf("ftell: %ld, position: %ld, line:%s\n", ftell(fptr), current_position, line_buffer);
-	fprintf(fptr, "%s", new_password);
+	for (i = 0; i < 14; i++) {
+		modified_line[i] = line_data[i];
+	}
+	
+	n = 0;
+	for (i = 14; i < ONE_LINE; i++) {
+		modified_line[i] = new_password[n];
+		n++;
+	}
+	printf("modified_line: %s", modified_line);
+
+	temp_fptr = fopen("temp_db", "w");
+	count = 0;
+	fseek(fptr, 0, SEEK_SET);
+	while ((fgets(buffer, TEMP_BUFFER, fptr)) != NULL) {
+		count++;
+
+		if (count == current_line) {
+			fputs(modified_line, temp_fptr);
+			fprintf(temp_fptr, "\n");
+		} else {
+			fputs(buffer, temp_fptr);
+		}
+	}
+
+	fclose(fptr);
+	fclose(temp_fptr);
+
+	remove("account_db");
+	rename("temp_db", "account_db");
 }
 
-void check_acc_exist(FILE *fptr, size_t acc_number, bool *is_account, size_t line_num)
+void check_acc_exist(FILE *fptr, size_t acc_number, bool *is_account, size_t line_num, char *line_data)
 {
 	char char_acc_num[9], buffer[9];
 	char *line = NULL;
@@ -32,6 +66,8 @@ void check_acc_exist(FILE *fptr, size_t acc_number, bool *is_account, size_t lin
 
 		strncpy(buffer, line, 8);
 		if (strcmp(buffer, char_acc_num) == 0) {
+			strncpy(line_data, line, 18);
+			line_data[ONE_LINE - 1] = '\0';
 			*is_account = true;
 			break;
 		}
@@ -41,12 +77,13 @@ void check_acc_exist(FILE *fptr, size_t acc_number, bool *is_account, size_t lin
 int update_account()
 {
 	FILE *fptr;
+	char line_data[ONE_LINE];
 	size_t acc_number;
 	size_t line_num = 0;
 	bool is_account = {false};
-	long current_position;
+	size_t current_line;
 
-	printf("please enter your account number: \n");
+	printf("please enter your account number: ");
 	scanf("%lu", &acc_number);
 
 	fptr = fopen("account_db", "r+");
@@ -54,18 +91,19 @@ int update_account()
 		exit(1);
 	}
 
-	check_acc_exist(fptr, acc_number, &is_account, line_num);
+	check_acc_exist(fptr, acc_number, &is_account, line_num, line_data);
+	printf("Line data: %s\n", line_data);
 
 	if (is_account == true) {
-		printf("account exists\n");
-		current_position = ftell(fptr) - 10;
-		get_and_change_pw(fptr, current_position);
+		printf("Account exists in db\n");
+		current_line = ftell(fptr) / 19;
+
+		printf("Line number: %lu\n", current_line);
+		get_and_change_pw(fptr, current_line, line_data);
 	} else {
 		printf("account doesn't exist\n");
 		exit(1);
 	}
-
-	fclose(fptr);
 	
 	return 1;
 }
