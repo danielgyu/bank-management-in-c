@@ -38,16 +38,22 @@ struct AccountInfo* create_account(struct AccountInfo* acc_info)
 void save_account(struct AccountInfo* acc_info)
 {
 	// make file for account's name, password, acc_number, balance
-	FILE *fptr;
+	FILE *afptr;
+	FILE *bfptr;
+
 	if (fopen("account_db", "r") == NULL) {
-		fptr = fopen("account_db", "w");
+		afptr = fopen("account_db", "w");
+		bfptr = fopen("balance_db", "w");
 	} else {
-		fptr = fopen("account_db", "a");
+		afptr = fopen("account_db", "a");
+		bfptr = fopen("balance_db", "a");
 	}
 
-	fprintf(fptr, "%s, %s, %s\n", acc_info->account_num, acc_info->holder_name, acc_info->password);
+	fprintf(afptr, "%s, %s, %s\n", acc_info->account_num, acc_info->holder_name, acc_info->password);
+	fprintf(bfptr, "%d\n", 0);
 
-	fclose(fptr);
+	fclose(afptr);
+	fclose(bfptr);
 }
 
 

@@ -3,9 +3,12 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+#include "bank.h"
+
 #define PW_LENGTH (4)
 #define ONE_LINE (19)
 #define TEMP_BUFFER (1000)
+#define UNTIL_PASSWORD (19)
 
 void get_and_change_pw(FILE *fptr, size_t current_line, char *line_data) {
 	FILE *temp_fptr;
@@ -21,12 +24,12 @@ void get_and_change_pw(FILE *fptr, size_t current_line, char *line_data) {
 		exit(1);
 	}
 
-	for (i = 0; i < 14; i++) {
+	for (i = 0; i < UNTIL_PASSWORD; i++) {
 		modified_line[i] = line_data[i];
 	}
 	
 	n = 0;
-	for (i = 14; i < ONE_LINE; i++) {
+	for (i = UNTIL_PASSWORD; i < ONE_LINE; i++) {
 		modified_line[i] = new_password[n];
 		n++;
 	}
@@ -53,26 +56,7 @@ void get_and_change_pw(FILE *fptr, size_t current_line, char *line_data) {
 	rename("temp_db", "account_db");
 }
 
-void check_acc_exist(FILE *fptr, size_t acc_number, bool *is_account, size_t line_num, char *line_data)
-{
-	char char_acc_num[9], buffer[9];
-	char *line = NULL;
-	size_t len = 0;
-	ssize_t read_offset;
-
-	sprintf(char_acc_num, "%lu", acc_number);
-	while ((read_offset = getline(&line, &len, fptr)) != -1) {
-		line_num++;
-
-		strncpy(buffer, line, 8);
-		if (strcmp(buffer, char_acc_num) == 0) {
-			strncpy(line_data, line, 18);
-			line_data[ONE_LINE - 1] = '\0';
-			*is_account = true;
-			break;
-		}
-	}
-}
+// void check_acc_exist(FILE *fptr, size_t acc_number, bool *is_account, size_t line_num, char *line_data)
 
 int update_account()
 {
@@ -101,7 +85,7 @@ int update_account()
 		printf("Line number: %lu\n", current_line);
 		get_and_change_pw(fptr, current_line, line_data);
 	} else {
-		printf("account doesn't exist\n");
+		printf("Account doesn't exist\n");
 		exit(1);
 	}
 	

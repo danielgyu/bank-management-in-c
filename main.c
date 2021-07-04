@@ -10,8 +10,8 @@ int main (void)
 	printf("### BANK MANAGEMENT SYSTEM ###\n");
 	printf("1.Create new account\n");
 	printf("2.Update account information\n");
-	printf("3.Transactions\n");
-	printf("4.Check account details\n");
+	printf("3.Check balance\n");
+	printf("4.Make transaction\n");
 	printf("5.Remove existing account\n");
 	printf("6.Exit\n");
 	printf("\n");
@@ -30,6 +30,7 @@ int main (void)
 			update_account();
 			break;
 		case 3:
+			check_balance();
 			break;
 		case 4:
 			break;
