@@ -8,7 +8,7 @@
 #define PW_LENGTH (4)
 #define ONE_LINE (19)
 #define TEMP_BUFFER (1000)
-#define UNTIL_PASSWORD (19)
+#define UNTIL_PASSWORD (14)
 
 void get_and_change_pw(FILE *fptr, size_t current_line, char *line_data) {
 	FILE *temp_fptr;
