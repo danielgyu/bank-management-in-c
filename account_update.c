@@ -10,7 +10,7 @@
 #define TEMP_BUFFER (1000)
 #define UNTIL_PASSWORD (14)
 
-void get_and_change_pw(FILE *fptr, size_t current_line, char *line_data) {
+void get_and_change_pw(FILE *fptr, size_t line_num, char *line_data) {
 	FILE *temp_fptr;
 	char new_password[PW_LENGTH + 1];
 	char buffer[TEMP_BUFFER];
@@ -41,7 +41,7 @@ void get_and_change_pw(FILE *fptr, size_t current_line, char *line_data) {
 	while ((fgets(buffer, TEMP_BUFFER, fptr)) != NULL) {
 		count++;
 
-		if (count == current_line) {
+		if (count == line_num) {
 			fputs(modified_line, temp_fptr);
 			fprintf(temp_fptr, "\n");
 		} else {
@@ -56,8 +56,6 @@ void get_and_change_pw(FILE *fptr, size_t current_line, char *line_data) {
 	rename("temp_db", "account_db");
 }
 
-// void check_acc_exist(FILE *fptr, size_t acc_number, bool *is_account, size_t line_num, char *line_data)
-
 int update_account()
 {
 	FILE *fptr;
@@ -65,7 +63,6 @@ int update_account()
 	size_t acc_number;
 	size_t line_num = 0;
 	bool is_account = {false};
-	size_t current_line;
 
 	printf("please enter your account number: ");
 	scanf("%lu", &acc_number);
@@ -75,15 +72,11 @@ int update_account()
 		exit(1);
 	}
 
-	check_acc_exist(fptr, acc_number, &is_account, line_num, line_data);
+	check_acc_exist(fptr, acc_number, &is_account, &line_num, line_data);
 	printf("Line data: %s\n", line_data);
 
 	if (is_account == true) {
-		printf("Account exists in db\n");
-		current_line = ftell(fptr) / 19;
-
-		printf("Line number: %lu\n", current_line);
-		get_and_change_pw(fptr, current_line, line_data);
+		get_and_change_pw(fptr, line_num, line_data);
 	} else {
 		printf("Account doesn't exist\n");
 		exit(1);

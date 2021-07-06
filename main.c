@@ -11,8 +11,8 @@ int main (void)
 	printf("1.Create new account\n");
 	printf("2.Update account information\n");
 	printf("3.Check balance\n");
-	printf("4.Make transaction\n");
-	printf("5.Remove existing account\n");
+	printf("4.Deposit\n");
+	printf("5.Make transaction\n");
 	printf("6.Exit\n");
 	printf("\n");
 	printf("Select 1-6: ");
@@ -33,14 +33,16 @@ int main (void)
 			check_balance();
 			break;
 		case 4:
+			make_deposit();
 			break;
 		case 5:
+			make_transaction();
 			break;
 		case 6:
-			break;
-		case 7:
 			break;
 		default:
 			break;
 	}
+
+	return 1;
 }

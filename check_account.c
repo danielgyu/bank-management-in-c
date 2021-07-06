@@ -22,7 +22,7 @@ void get_account_balance(FILE *fptr, size_t target_line_num)
 	}
 }
 
-void check_balance()
+int check_balance()
 {
 	FILE *afptr, *bfptr;
 	bool is_account = {false};
@@ -47,4 +47,6 @@ void check_balance()
 		printf("Account doesn't exist\n");
 		exit(1);
 	}
+
+	return 1;
 }

@@ -3,7 +3,9 @@
 
 int create_new_account();
 int update_account();
-void check_balance();
-void check_acc_exist();
+int check_balance();
+int check_acc_exist();
+int make_deposit();
+int make_transaction();
 
 #endif /* BANK_H */
